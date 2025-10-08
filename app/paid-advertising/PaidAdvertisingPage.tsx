@@ -31,6 +31,15 @@ export default function PaidAdvertisingPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [slotsRemaining, setSlotsRemaining] = useState<number | null>(null)
+
+  // Fetch remaining slots on mount
+  useState(() => {
+    fetch('/api/get-slots-remaining')
+      .then(res => res.json())
+      .then(data => setSlotsRemaining(data.remaining))
+      .catch(() => setSlotsRemaining(30)) // Default to 30 if API fails
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,6 +65,12 @@ export default function PaidAdvertisingPage() {
 
       if (response.ok) {
         setSubmitSuccess(true)
+        // Decrement slot counter
+        if (slotsRemaining !== null && slotsRemaining > 0) {
+          setSlotsRemaining(slotsRemaining - 1)
+        }
+        // Update slot count in backend
+        fetch('/api/decrement-slot', { method: 'POST' }).catch(console.error)
         // Redirect to Calendly or thank you page after 2 seconds
         setTimeout(() => {
           window.location.href = '/schedule'
@@ -83,7 +98,7 @@ export default function PaidAdvertisingPage() {
       {/* Urgency Bar */}
       <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white py-3 text-center">
         <p className="text-sm md:text-base font-semibold">
-          ⚡ Limited Availability: Only <span className="text-yellow-300">5 consultation slots</span> left this month
+          ⚡ Limited Availability: Only <span className="text-yellow-300">{slotsRemaining ?? 30} consultation slot{slotsRemaining === 1 ? '' : 's'}</span> left this month
         </p>
       </div>
 
@@ -599,7 +614,7 @@ export default function PaidAdvertisingPage() {
             Book My Free Audit Now
             <ArrowRight className="ml-2 h-6 w-6" />
           </Button>
-          <p className="text-sm text-blue-200 mt-4">⚡ Only 5 spots left this month</p>
+          <p className="text-sm text-blue-200 mt-4">⚡ Only {slotsRemaining ?? 30} spots left this month</p>
         </div>
       </section>
     </div>

@@ -19,6 +19,9 @@ yarn-error.log*
 # env files
 .env*
 
+# slot counter
+slots-counter.json
+
 # vercel
 .vercel
 
