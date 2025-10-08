@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm update:*)",
+      "WebSearch",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: AI Stream Solutions website with ROI calculator\n\n- Next.js 15 with App Router\n- ROI calculator with email delivery via Resend\n- Instantly.ai integration for lead capture\n- Process page with 4-step automation framework\n- Beautiful HTML email reports with:\n  - Executive summary\n  - 3-year savings projection\n  - Weekly/monthly/yearly breakdown\n  - FTE equivalent calculations\n  - Contextual comparisons\n- SEO optimized with structured data\n- Responsive design with Tailwind CSS\n\n🤖 Generated with Claude Code (https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

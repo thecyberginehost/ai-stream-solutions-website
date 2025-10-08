@@ -1,0 +1,194 @@
+{
+  "name": "ROI Calculator - PDF Generation & Lead Capture",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "roi-calculator",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "roi-calculator-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract data from webhook\nconst data = $input.item.json;\n\n// Create formatted HTML for PDF\nconst html = `\n<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    @page { margin: 40px; }\n    body {\n      font-family: 'Helvetica', 'Arial', sans-serif;\n      color: #1e293b;\n      line-height: 1.6;\n    }\n    .header {\n      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);\n      color: white;\n      padding: 40px;\n      margin: -40px -40px 30px -40px;\n    }\n    .header h1 {\n      margin: 0 0 10px 0;\n      font-size: 28px;\n    }\n    .header p {\n      margin: 0;\n      opacity: 0.9;\n      font-size: 14px;\n    }\n    .section {\n      margin-bottom: 30px;\n    }\n    .section-title {\n      color: #2563eb;\n      font-size: 18px;\n      font-weight: bold;\n      margin-bottom: 15px;\n      border-bottom: 2px solid #e2e8f0;\n      padding-bottom: 8px;\n    }\n    .info-grid {\n      display: grid;\n      grid-template-columns: 1fr 1fr;\n      gap: 15px;\n      margin-bottom: 20px;\n    }\n    .info-item {\n      background: #f8fafc;\n      padding: 12px;\n      border-radius: 6px;\n      border-left: 3px solid #2563eb;\n    }\n    .info-label {\n      font-size: 11px;\n      color: #64748b;\n      text-transform: uppercase;\n      margin-bottom: 4px;\n    }\n    .info-value {\n      font-size: 14px;\n      font-weight: bold;\n      color: #1e293b;\n    }\n    .metric-box {\n      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);\n      border: 2px solid #2563eb;\n      border-radius: 10px;\n      padding: 20px;\n      margin-bottom: 15px;\n      text-align: center;\n    }\n    .metric-label {\n      font-size: 12px;\n      color: #64748b;\n      margin-bottom: 8px;\n    }\n    .metric-value {\n      font-size: 32px;\n      font-weight: bold;\n      color: #2563eb;\n      margin-bottom: 5px;\n    }\n    .metric-subtitle {\n      font-size: 11px;\n      color: #64748b;\n    }\n    .benefits {\n      background: #f8fafc;\n      padding: 20px;\n      border-radius: 8px;\n      margin-top: 20px;\n    }\n    .benefits ul {\n      margin: 10px 0;\n      padding-left: 20px;\n    }\n    .benefits li {\n      margin-bottom: 8px;\n      color: #1e293b;\n    }\n    .footer {\n      margin-top: 40px;\n      padding-top: 20px;\n      border-top: 2px solid #e2e8f0;\n      text-align: center;\n      color: #64748b;\n      font-size: 11px;\n    }\n    .cta-box {\n      background: #2563eb;\n      color: white;\n      padding: 25px;\n      border-radius: 10px;\n      text-align: center;\n      margin: 30px 0;\n    }\n    .cta-box h3 {\n      margin: 0 0 10px 0;\n      font-size: 20px;\n    }\n    .cta-box p {\n      margin: 0;\n      opacity: 0.9;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"header\">\n    <h1>AI Stream Solutions</h1>\n    <p>Automation ROI Analysis Report</p>\n    <p>Generated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>\n  </div>\n\n  <div class=\"section\">\n    <div class=\"section-title\">Client Information</div>\n    <div class=\"info-grid\">\n      ${data.firstName || data.lastName ? `\n      <div class=\"info-item\">\n        <div class=\"info-label\">Name</div>\n        <div class=\"info-value\">${data.firstName || ''} ${data.lastName || ''}</div>\n      </div>\n      ` : ''}\n      <div class=\"info-item\">\n        <div class=\"info-label\">Email</div>\n        <div class=\"info-value\">${data.email}</div>\n      </div>\n      ${data.companyName ? `\n      <div class=\"info-item\">\n        <div class=\"info-label\">Company</div>\n        <div class=\"info-value\">${data.companyName}</div>\n      </div>\n      ` : ''}\n    </div>\n  </div>\n\n  <div class=\"section\">\n    <div class=\"section-title\">Your Current Situation</div>\n    <div class=\"info-grid\">\n      <div class=\"info-item\">\n        <div class=\"info-label\">Number of Employees</div>\n        <div class=\"info-value\">${data.roiCalculations.employees}</div>\n      </div>\n      <div class=\"info-item\">\n        <div class=\"info-label\">Hours per Week (per employee)</div>\n        <div class=\"info-value\">${data.roiCalculations.hoursPerWeek} hours</div>\n      </div>\n      <div class=\"info-item\">\n        <div class=\"info-label\">Average Hourly Rate</div>\n        <div class=\"info-value\">$${data.roiCalculations.avgHourlyRate}</div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"section\">\n    <div class=\"section-title\">Your Automation ROI</div>\n    \n    <div class=\"info-grid\">\n      <div class=\"metric-box\" style=\"background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-color: #16a34a;\">\n        <div class=\"metric-label\">Time Saved Per Year</div>\n        <div class=\"metric-value\" style=\"color: #16a34a;\">${data.roiCalculations.yearlyTimeSaved.toLocaleString()}</div>\n        <div class=\"metric-subtitle\">hours</div>\n      </div>\n      \n      <div class=\"metric-box\">\n        <div class=\"metric-label\">Cost Saved Per Year</div>\n        <div class=\"metric-value\">$${data.roiCalculations.yearlyCostSaved.toLocaleString()}</div>\n        <div class=\"metric-subtitle\">in labor costs</div>\n      </div>\n    </div>\n\n    <div class=\"info-grid\">\n      <div class=\"metric-box\" style=\"background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: #f59e0b;\">\n        <div class=\"metric-label\">Time to ROI</div>\n        <div class=\"metric-value\" style=\"color: #f59e0b;\">${data.roiCalculations.monthsToROI}</div>\n        <div class=\"metric-subtitle\">months to break even</div>\n      </div>\n      \n      <div class=\"metric-box\" style=\"background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); border-color: #a855f7;\">\n        <div class=\"metric-label\">Net First-Year Savings</div>\n        <div class=\"metric-value\" style=\"color: #a855f7;\">$${data.roiCalculations.netFirstYearSavings.toLocaleString()}</div>\n        <div class=\"metric-subtitle\">after investment</div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"section\">\n    <div class=\"section-title\">Monthly Impact</div>\n    <div class=\"benefits\">\n      <ul>\n        <li><strong>${data.roiCalculations.monthlyTimeSaved} hours/month</strong> freed up for strategic work</li>\n        <li><strong>$${data.roiCalculations.monthlyCostSaved.toLocaleString()}/month</strong> in cost savings</li>\n        <li>99.99% uptime with enterprise-grade infrastructure</li>\n        <li>Dedicated account manager & weekly strategy calls</li>\n        <li>Real-time monitoring and performance tracking</li>\n        <li>Unlimited workflow updates and optimizations</li>\n      </ul>\n    </div>\n  </div>\n\n  <div class=\"cta-box\">\n    <h3>Ready to Unlock These Savings?</h3>\n    <p>Schedule your free automation audit today and see how we can transform your business.</p>\n  </div>\n\n  <div class=\"footer\">\n    <p><strong>AI Stream Solutions</strong></p>\n    <p>https://aistreamsolutions.com | contact@aistreamsolutions.com</p>\n    <p>© ${new Date().getFullYear()} AI Stream Solutions. All rights reserved.</p>\n  </div>\n</body>\n</html>\n`;\n\nreturn {\n  html: html,\n  email: data.email,\n  firstName: data.firstName || '',\n  lastName: data.lastName || '',\n  companyName: data.companyName || '',\n  roiCalculations: data.roiCalculations\n};"
+      },
+      "id": "generate-html",
+      "name": "Generate PDF HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "operation": "convert",
+        "html": "={{ $json.html }}",
+        "options": {
+          "format": "A4",
+          "marginTop": 10,
+          "marginRight": 10,
+          "marginBottom": 10,
+          "marginLeft": 10,
+          "displayHeaderFooter": false
+        }
+      },
+      "id": "html-to-pdf",
+      "name": "HTML to PDF",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@aistreamsolutions.com",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Your Personalized ROI Analysis - AI Stream Solutions",
+        "emailType": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <div style=\"background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; padding: 30px; text-align: center;\">\n    <h1 style=\"margin: 0; font-size: 24px;\">Your ROI Analysis is Ready!</h1>\n  </div>\n  \n  <div style=\"padding: 30px; background: #ffffff;\">\n    <p style=\"font-size: 16px; color: #1e293b;\">Hi {{ $json.firstName || 'there' }},</p>\n    \n    <p style=\"font-size: 14px; color: #475569; line-height: 1.6;\">\n      Thank you for using our ROI Calculator! We've attached your personalized automation ROI analysis as a PDF.\n    </p>\n    \n    <div style=\"background: #f8fafc; border-left: 4px solid #2563eb; padding: 20px; margin: 20px 0;\">\n      <p style=\"margin: 0 0 10px 0; font-weight: bold; color: #1e293b;\">Your Potential Savings:</p>\n      <ul style=\"margin: 0; padding-left: 20px; color: #475569;\">\n        <li><strong>${{ $json.roiCalculations.yearlyTimeSaved.toLocaleString() }} hours</strong> saved per year</li>\n        <li><strong>${{ $json.roiCalculations.yearlyCostSaved.toLocaleString() }}</strong> in annual cost savings</li>\n        <li>Break even in just <strong>{{ $json.roiCalculations.monthsToROI }} months</strong></li>\n      </ul>\n    </div>\n    \n    <p style=\"font-size: 14px; color: #475569; line-height: 1.6;\">\n      These numbers show the real impact automation can have on your business. We'd love to discuss how we can make this a reality for {{ $json.companyName || 'your company' }}.\n    </p>\n    \n    <div style=\"text-align: center; margin: 30px 0;\">\n      <a href=\"https://aistreamsolutions.com/schedule\" style=\"display: inline-block; background: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;\">Schedule Your Free Consultation</a>\n    </div>\n    \n    <p style=\"font-size: 13px; color: #64748b; line-height: 1.6;\">\n      Questions? Just reply to this email - we're here to help!\n    </p>\n    \n    <p style=\"font-size: 14px; color: #1e293b; margin-top: 30px;\">\n      Best regards,<br>\n      <strong>The AI Stream Solutions Team</strong>\n    </p>\n  </div>\n  \n  <div style=\"background: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #64748b;\">\n    <p style=\"margin: 0;\">AI Stream Solutions | <a href=\"https://aistreamsolutions.com\" style=\"color: #2563eb;\">aistreamsolutions.com</a></p>\n  </div>\n</div>",
+        "attachments": "data",
+        "options": {
+          "attachmentsPropertyName": "data"
+        }
+      },
+      "id": "send-email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [850, 300],
+      "credentials": {
+        "smtp": {
+          "id": "your-smtp-credentials-id",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.instantly.ai/api/v2/leads",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "email",
+              "value": "={{ $json.email }}"
+            },
+            {
+              "name": "first_name",
+              "value": "={{ $json.firstName }}"
+            },
+            {
+              "name": "last_name",
+              "value": "={{ $json.lastName }}"
+            },
+            {
+              "name": "company_name",
+              "value": "={{ $json.companyName }}"
+            },
+            {
+              "name": "campaign_id",
+              "value": "801b2b50-f7f3-4cb8-bb6a-9d84130b97f7"
+            },
+            {
+              "name": "custom_variables",
+              "value": "={{ { roi_employees: $json.roiCalculations.employees.toString(), roi_hours_per_week: $json.roiCalculations.hoursPerWeek.toString(), roi_hourly_rate: $json.roiCalculations.avgHourlyRate.toString(), roi_yearly_savings: $json.roiCalculations.yearlyCostSaved.toString(), roi_time_saved_yearly: $json.roiCalculations.yearlyTimeSaved.toString(), roi_months_to_roi: $json.roiCalculations.monthsToROI.toString(), roi_net_first_year: $json.roiCalculations.netFirstYearSavings.toString() } }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "add-to-instantly",
+      "name": "Add to Instantly.ai",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "your-instantly-credentials-id",
+          "name": "Instantly.ai API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={ \"success\": true, \"message\": \"ROI report sent successfully\" }"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Generate PDF HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate PDF HTML": {
+      "main": [
+        [
+          {
+            "node": "HTML to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML to PDF": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Add to Instantly.ai",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
