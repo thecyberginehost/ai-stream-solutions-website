@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { CheckCircle, Calendar, Clock, Mail, Phone, ArrowRight } from "lucide-react"
+import { CheckCircle, Calendar, Mail, Phone, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
@@ -48,19 +48,9 @@ export default function ConfirmBookingPage() {
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Clock className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">2. Pre-Call Preparation</h3>
-                  <p className="text-gray-600 text-sm">
-                    Our AI assistant will contact you via call or SMS within 24 hours to gather details about your
-                    business needs and current processes, ensuring we maximize the value of your discovery call.
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Phone className="w-6 h-6 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">3. Discovery Call</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">2. Discovery Call</h3>
                   <p className="text-gray-600 text-sm">
                     We'll discuss your automation goals and create a custom strategy for your business growth.
                   </p>

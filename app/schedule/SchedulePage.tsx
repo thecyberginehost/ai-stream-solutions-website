@@ -129,20 +129,6 @@ export default function SchedulePage() {
                 </CardContent>
               </Card>
 
-              {/* AI Assistant Notice */}
-              <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Pre-Call Preparation</h3>
-                  <p className="text-sm text-gray-700 mb-3">
-                    After booking, our AI assistant will contact you via call or SMS within 24 hours to gather details
-                    about your business needs.
-                  </p>
-                  <p className="text-sm text-blue-700 font-medium">
-                    This ensures we maximize the value of your discovery call!
-                  </p>
-                </CardContent>
-              </Card>
-
               {/* Support */}
               <Card>
                 <CardContent className="p-6 text-center">
